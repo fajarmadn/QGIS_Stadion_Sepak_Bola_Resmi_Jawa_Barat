@@ -1,7 +1,7 @@
-# Database offline lokal berukuran besar
+# Database offline lokal
 *.mbtiles
 
-# Tile raster lokal QGIS (diabaikan agar repositori bersih dan ringan)
+# Tile raster lokal QGIS
 8/
 9/
 10/
@@ -10,6 +10,16 @@
 13/
 14/
 15/
+
+# Data spasial lokal (tidak diunggah ke repositori web)
+data/
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.csv
+*.qgz
 
 # Temporary / cache files
 *.tmp
