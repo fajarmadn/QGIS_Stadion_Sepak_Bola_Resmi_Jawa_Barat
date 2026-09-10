@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peta Sebaran Stadion Sepak Bola Jawa Barat</title>
+  <title>Peta Sebaran Stadion Sepak Bola Resmi Jawa Barat</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
@@ -13,19 +13,52 @@
       margin: 0;
       padding: 0;
     }
+    /* Style Label Kotak Hitam Teks Putih Khas QGIS */
+    .qgis-label {
+      background: #000000 !important;
+      color: #ffffff !important;
+      font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 2px;
+      border: 1px solid #444444 !important;
+      white-space: nowrap;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+      pointer-events: auto;
+    }
+    /* Hilangkan panah segitiga default Leaflet tooltip */
+    .leaflet-tooltip-top:before,
+    .leaflet-tooltip-bottom:before,
+    .leaflet-tooltip-left:before,
+    .leaflet-tooltip-right:before {
+      display: none !important;
+    }
+    /* Popup Detail Stadion */
     .stadium-popup {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: "Open Sans", -apple-system, sans-serif;
       line-height: 1.4;
     }
     .stadium-popup h3 {
       margin: 0 0 4px 0;
       font-size: 14px;
-      color: #1a237e;
+      color: #b71c1c;
     }
     .stadium-popup p {
       margin: 0;
       font-size: 12px;
-      color: #555;
+      color: #333;
+    }
+    .stadium-popup a {
+      display: inline-block;
+      margin-top: 6px;
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .stadium-popup a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -37,58 +70,71 @@
   <script src="data/stadion.js"></script>
 
   <script>
-    // Inisialisasi peta Leaflet
+    // 1. Inisialisasi peta Leaflet
     var map = L.map('map', {
       zoomControl: true
     }).setView([-6.86858, 107.603], 9);
 
-    // Basemap OpenStreetMap
+    // 2. Basemap OpenStreetMap
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Layer 1: Poligon Batas Provinsi Jawa Barat
+    // 3. Layer Batas Provinsi Jawa Barat (Garis Merah Khas QGIS Anda)
     var layerBatas = L.geoJSON(batasJawaBarat, {
       style: {
-        color: '#1565c0',
-        weight: 2,
-        opacity: 0.9,
-        fillColor: '#2196f3',
-        fillOpacity: 0.08
+        color: '#d32f2f',
+        weight: 2.5,
+        opacity: 0.95,
+        fillColor: '#d32f2f',
+        fillOpacity: 0.04
       }
     }).addTo(map);
 
-    // Layer 2: 40 Titik Stadion Sepak Bola Resmi Jawa Barat
+    // 4. Ikon Bintang Ledakan Kuning (Starburst Asli QGIS: 2 Bintang Tumpuk Rotasi 34 Derajat)
+    var starburstIcon = L.divIcon({
+      className: 'qgis-star-marker',
+      html: '<svg width="22" height="22" viewBox="-12 -12 24 24" style="display:block;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));cursor:pointer;">' +
+              '<polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#fff000" stroke="#000000" stroke-width="1.2"/>' +
+              '<polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" transform="rotate(34)" fill="#fff000" stroke="#000000" stroke-width="1.2"/>' +
+            '</svg>',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+      popupAnchor: [0, -11]
+    });
+
+    // 5. Layer 40 Titik Stadion Sepak Bola Resmi Jawa Barat
     var layerStadion = L.geoJSON(dataStadion, {
       pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 6,
-          fillColor: '#d32f2f',
-          color: '#ffffff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.9
-        });
+        return L.marker(latlng, { icon: starburstIcon });
       },
       onEachFeature: function (feature, layer) {
         var p = feature.properties;
+        
+        // Popup saat titik diklik
+        var gmapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + p.latitude + ',' + p.longitude;
         var popupContent = 
           '<div class="stadium-popup">' +
-            '<h3>' + p.nama + '</h3>' +
+            '<h3>⭐ ' + p.nama + '</h3>' +
             '<p><strong>Koordinat:</strong> ' + p.latitude + ', ' + p.longitude + '</p>' +
+            '<a href="' + gmapsUrl + '" target="_blank">📍 Buka di Google Maps &rarr;</a>' +
           '</div>';
         layer.bindPopup(popupContent);
+
+        // Label Nama Stadion Selalu Menyala (Permanent On) Khas QGIS
         layer.bindTooltip(p.nama, {
+          permanent: true,
           direction: 'top',
-          offset: [0, -6]
+          offset: [0, -12],
+          className: 'qgis-label'
         });
       }
     }).addTo(map);
 
-    // Sesuaikan kamera peta agar seluruh wilayah Jawa Barat pas di layar
+    // 6. Sesuaikan kamera peta agar seluruh Jawa Barat pas di layar
     if (layerBatas.getBounds().isValid()) {
-      map.fitBounds(layerBatas.getBounds(), { padding: [20, 20] });
+      map.fitBounds(layerBatas.getBounds(), { padding: [25, 25] });
     }
   </script>
 </body>
