@@ -1,1 +1,95 @@
-<!DOCTYPE html><html><head><title>Peta Stadion Sepak Bola Jawa Barat</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"crossorigin=""/><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"crossorigin=""></script><style type="text/css">body {margin: 0;padding: 0;} html, body, #map{width: 100%;height: 100%;}</style></head><body><div id="map"></div><script>var map = L.map('map', {attributionControl: false}).setView([-6.86858, 107.603], 11);L.control.attribution({prefix: false}).addTo(map);var tilesource_layer = L.tileLayer('./{z}/{x}/{y}.png', {minZoom: 8, maxNativeZoom: 15, maxZoom: 18, tms: false, attribution: 'Created by QGIS'}).addTo(map);</script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peta Sebaran Stadion Sepak Bola Jawa Barat</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    html, body, #map {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .stadium-popup {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.4;
+    }
+    .stadium-popup h3 {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      color: #1a237e;
+    }
+    .stadium-popup p {
+      margin: 0;
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Data Geospasial Vektor -->
+  <script src="data/batas_jawa_barat.js"></script>
+  <script src="data/stadion.js"></script>
+
+  <script>
+    // Inisialisasi peta Leaflet
+    var map = L.map('map', {
+      zoomControl: true
+    }).setView([-6.86858, 107.603], 9);
+
+    // Basemap OpenStreetMap
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Layer 1: Poligon Batas Provinsi Jawa Barat
+    var layerBatas = L.geoJSON(batasJawaBarat, {
+      style: {
+        color: '#1565c0',
+        weight: 2,
+        opacity: 0.9,
+        fillColor: '#2196f3',
+        fillOpacity: 0.08
+      }
+    }).addTo(map);
+
+    // Layer 2: 40 Titik Stadion Sepak Bola Resmi Jawa Barat
+    var layerStadion = L.geoJSON(dataStadion, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 6,
+          fillColor: '#d32f2f',
+          color: '#ffffff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.9
+        });
+      },
+      onEachFeature: function (feature, layer) {
+        var p = feature.properties;
+        var popupContent = 
+          '<div class="stadium-popup">' +
+            '<h3>' + p.nama + '</h3>' +
+            '<p><strong>Koordinat:</strong> ' + p.latitude + ', ' + p.longitude + '</p>' +
+          '</div>';
+        layer.bindPopup(popupContent);
+        layer.bindTooltip(p.nama, {
+          direction: 'top',
+          offset: [0, -6]
+        });
+      }
+    }).addTo(map);
+
+    // Sesuaikan kamera peta agar seluruh wilayah Jawa Barat pas di layar
+    if (layerBatas.getBounds().isValid()) {
+      map.fitBounds(layerBatas.getBounds(), { padding: [20, 20] });
+    }
+  </script>
+</body>
+</html>

@@ -1,6 +1,16 @@
-# Batasi file berukuran besar melampaui batas 100 MB GitHub
+# Database offline lokal berukuran besar
 *.mbtiles
 
-# Temporary files
+# Tile raster lokal QGIS (diabaikan agar repositori bersih dan ringan)
+8/
+9/
+10/
+11/
+12/
+13/
+14/
+15/
+
+# Temporary / cache files
 *.tmp
 .vscode/
