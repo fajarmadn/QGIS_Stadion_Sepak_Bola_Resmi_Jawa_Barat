@@ -1,0 +1,6 @@
+# Batasi file berukuran besar melampaui batas 100 MB GitHub
+*.mbtiles
+
+# Temporary files
+*.tmp
+.vscode/
