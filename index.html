@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Peta Sebaran Stadion Sepak Bola Resmi Jawa Barat</title>
   
-  <!-- Font Open Sans Resmi (Persis QGIS) -->
+  <!-- Font Open Sans Regular (Persis Settingan Asli QGIS) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -21,13 +21,13 @@
       margin: 0;
       padding: 0;
     }
-    /* Style Label Kotak Persegi Polos Teks Putih Font Open Sans Khas QGIS */
+    /* Style Label Kotak Persegi Polos Teks Putih Font Open Sans Regular (Tidak Tebal) */
     .qgis-label {
       background: #000000 !important;
       color: #ffffff !important;
       font-family: "Open Sans", sans-serif !important;
       font-size: 10px !important;
-      font-weight: 700 !important;
+      font-weight: 400 !important; /* Regular / Tidak Tebal */
       padding: 2px 5px !important;
       border-radius: 0 !important; /* Kotak persegi polos tanpa lengkungan */
       border: 1px solid #444444 !important;
@@ -99,7 +99,7 @@
       onEachFeature: function (feature, layer) {
         var p = feature.properties;
 
-        // Label Nama Stadion Selalu Menyala (Kotak Polos Font Open Sans)
+        // Label Nama Stadion Selalu Menyala (Kotak Polos Font Open Sans Regular)
         layer.bindTooltip(p.nama, {
           permanent: true,
           direction: 'top',
