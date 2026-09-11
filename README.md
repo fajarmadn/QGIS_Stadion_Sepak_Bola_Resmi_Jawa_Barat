@@ -11,8 +11,3 @@ WebGIS interaktif dapat langsung diakses secara publik melalui tautan GitHub Pag
 - `index.html` : Antarmuka WebGIS Leaflet interaktif yang mengonsumsi raster tile MBTiles melalui MapTiler Cloud CDN.
 - `README.md` : Dokumentasi repositori dan tautan akses WebGIS.
 - `.gitignore` : Konfigurasi pengabaian berkas lokal.
-
-## Fitur Peta
-- **Tampilan Penuh (Fullscreen)**: Tampilan peta bersih dan responsif di peramban web desktop maupun smartphone.
-- **Rendering Asli QGIS**: Menampilkan gaya visual asli (simbol bintang ledakan kuning, garis batas merah Jawa Barat, dan label kotak hitam teks putih).
-- **Penguncian Wilayah (maxBounds)**: Area jelajah terkunci kaku di sekeliling wilayah Provinsi Jawa Barat.
